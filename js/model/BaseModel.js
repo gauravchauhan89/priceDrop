@@ -8,7 +8,14 @@ function BaseModel() {
 }
 
 BaseModel.prototype = {
+		/**
+		 * @return PriceInfo
+		 */
 		getAllPrices : function () {
+			throw new Error("Abstract method!");
+		},
+
+		getDetails : function () {
 			throw new Error("Abstract method!");
 		}
 };
