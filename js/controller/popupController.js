@@ -31,6 +31,7 @@ var flipkart = {
 				
 				var details = data.details;
 				$("#flipkart-list")[0].innerHTML += details.name + "<br>";
+
 				if(!allPrices.isNull()) {
 					if(allPrices.exchangePrice != null) {
 						$("#flipkart-list")[0].innerHTML += "Original Price: " + allPrices.mainPrice + "<br />";
