@@ -16,7 +16,14 @@
   "content_scripts": [
     {
       "matches": ["http://*.flipkart.com/*"],
-      "js": ["js/contentScript/flipkartScript.js"]
+      "js": ["lib/third-party/jquery-2.1.1.min.js", 
+      		 "lib/common.js",
+      		 "js/contentScript/flipkartScript.js", 
+      		 "js/model/BaseModel.js", 
+      		 "js/model/FlipkartModel.js",
+      		 "js/model/PriceInfo.js", 
+      		 "js/model/Details.js", 
+      		 "js/service/storage.js"]
     }
   ]
 }

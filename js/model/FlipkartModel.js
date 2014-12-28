@@ -8,8 +8,11 @@ var FlipkartModel = function () {
 FlipkartModel.prototype = Object.create(BaseModel.prototype);
 
 FlipkartModel.prototype.getDetails = function (data) {
-		var details = $(data).find("[itemprop='name']");
-		return {name: details[0].innerHTML};
+		var details = new Details();
+		var name = $(data).find("[itemprop='name']");
+		details.name = name[0].innerHTML;
+		
+		return details;
 };
 
 FlipkartModel.prototype.getAllPrices = function (data) {
