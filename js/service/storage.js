@@ -19,5 +19,23 @@ var storage = {
 				chrome.storage.sync.set(store);
 			}
 		});
-	}	
+	},
+
+	getCollection : function (collectionKey, callBack) {
+		chrome.storage.sync.get(collectionKey, function (data) {
+			callBack(data[collectionKey]);
+		});
+	},
+	
+	getFromCollection : function (collectionKey, key, callBack) {
+		chrome.storage.sync.get(collectionKey, function (data) {
+			var map = data[collectionKey];
+			
+			if(map.hasOwnProperty(key)) {
+				callBack(map[key]);
+			} else {
+				callBack(null);
+			}
+		});
+	}
 };

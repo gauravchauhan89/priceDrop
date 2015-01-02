@@ -14,6 +14,7 @@ FlipkartModel.prototype.getDetails = function (data) {
 		
 		details.name = name[0].innerHTML;
 		details.imageUrl = imageUrl;
+		details.type = 'flipkart';
 		
 		return details;
 };
