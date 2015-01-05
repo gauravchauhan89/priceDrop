@@ -1,15 +1,21 @@
 var priceDropApp = angular.module('priceDropApp', []);
 
-priceDropApp.factory('storageService', function() {
-	  return storage;
-});
-
-priceDropApp.controller('PopupController',['$scope', 'storageService', function ($scope, storageService) {
-	storageService.getCollection('priceDropFlipkartData', function(data) {
+priceDropApp.controller('PopupController',['$scope', function ($scope) {
+	storage.getCollection('priceDropFlipkartData', function(data) {
 		$scope.$apply(function () {
 			$scope.data = data;
 		});
 	});
+	
+	$scope.remove = function (key) {
+		storage.removeFromCollection('priceDropFlipkartData', key, function () {
+			storage.getCollection('priceDropFlipkartData', function(data) {
+				$scope.$apply(function () {
+					$scope.data = data;
+				});
+			});
+		});
+	};
 }]);
 
 //document.addEventListener('DOMContentLoaded', function () {

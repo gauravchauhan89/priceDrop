@@ -37,8 +37,9 @@
   </head>
   <body ng-app="priceDropApp">
   	<div ng-controller="PopupController">
-  		<div ng-repeat="(key, value) in data">
+  		<div ng-repeat="(key, value) in data" ng-animate=" 'slide' ">
   			<p style="background-color: gray;">{{value.details.name}}</p>
+  			<button ng-click="remove(key)">Remove</button>
   			<a href="{{key}}" target="_blank">
   				<img ng-src="{{value.details.imageUrl}}"><br>
   				Main Price: 
