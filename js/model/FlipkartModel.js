@@ -15,6 +15,7 @@ FlipkartModel.prototype.getDetails = function (data) {
 		details.name = name[0].innerHTML;
 		details.imageUrl = imageUrl;
 		details.type = 'flipkart';
+		details.additionTime = Date.now();
 		
 		return details;
 };
@@ -41,10 +42,14 @@ FlipkartModel.prototype.getAllPrices = function (data) {
 		}
 			
 		// prices from other retailers
+		var min = 99999999999999999;
 		for(var i=otherPriceIndex; i<html.length; i++) {
 			var meta = $(html[i]).find("meta[itemprop='price']");
 			var price = Utils.parseInt(meta[0].getAttribute('content'));
-			priceInfoObject.otherPrices.push(price);
+			if(price < min) {
+				min = price;
+				priceInfoObject.otherPrice = price;
+			}
 		}
 		
 		return priceInfoObject;

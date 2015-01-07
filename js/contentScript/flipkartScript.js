@@ -5,7 +5,10 @@ function addToStore() {
 	var details = flipkartDto.getDetails(document);
 	details.url = url;
 	
-	var data = {priceInfo: allPrices, details: details};
+	var data = new Data();
+	data.priceInfo = allPrices;
+	data.details = details;
+	
 	storage.addToCollection('priceDropFlipkartData', url, data);
 }
 

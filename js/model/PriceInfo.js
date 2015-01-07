@@ -1,13 +1,13 @@
 function PriceInfo() {
 	this.mainPrice = null;
 	this.exchangePrice = null;
-	this.otherPrices = [];
+	this.otherPrice = null;
 }
 
 PriceInfo.prototype = {
 		mainPrice : null,
 		exchangePrice : null,
-		otherPrices : [],
+		otherPrice : null,
 		isNull : function () {
 			if(this.mainPrice == null && this.exchangePrice == null)
 				return true;
