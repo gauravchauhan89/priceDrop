@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html  ng-app="priceDropApp" ng-csp>
   <head>
     <title>Flipkart</title>
     <style>
@@ -25,8 +25,8 @@
      -->
      <script src="../lib/third-party/jquery-2.1.1.js"></script>
      <script src="../lib/third-party/jquery.xpath.js"></script>
-     <script src="../lib/third-party/angular.js" ng-csp></script>
-     <script src="../lib/third-party/angular-animate.min.js" ng-csp></script>
+     <script src="../lib/third-party/angular.js"></script>
+     <script src="../lib/third-party/angular-animate.min.js"></script>
      <script src="../lib/xpath.js"></script>
      <script src="../lib/common.js"></script>
      <script src="../js/service/storage.js"></script>
@@ -39,8 +39,8 @@
      <script src="../js/model/FlipkartModel.js"></script>
      <script src="../js/controller/popupController.js"></script>
   </head>
-  <body ng-app="priceDropApp">
-  	<div ng-controller="PopupController" style="display: block;width: 373px;height: 600px;">
+  <body ng-controller="PopupController">
+  	<div style="display: block;width: 373px;height: 600px;">
   		<div ng-repeat="(key, value) in data">
   			<p style="background-color: gray;">{{value.details.name}}</p>
   			<a href="{{key}}" target="_blank">

@@ -10,4 +10,4 @@ function check() {
 }
 
 check();
-setInterval(check, 60*1000);
+setInterval(check, 2*60*60*1000);	// 2 hours

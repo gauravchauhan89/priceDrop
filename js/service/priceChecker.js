@@ -20,6 +20,7 @@ var priceChecker = {
 				});
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
+				// TODO log errors
 			}
 		});
 	},
