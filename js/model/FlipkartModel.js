@@ -32,7 +32,12 @@ FlipkartModel.prototype.getAllPrices = function (data) {
 			if(html.length != 0) {
 				var meta = $(html[0]).find("meta[itemprop='price']");
 				var price = Utils.parseInt(meta[0].getAttribute('content'));
+				var sellingPrice = $(html[0]).find(".selling-price.omniture-field")[0].getAttribute("data-evar48");
 				otherPriceIndex = 1;
+				
+				if(sellingPrice < price)
+					price = sellingPrice;
+				
 				priceInfoObject.mainPrice = price;
 			}
 		} else {

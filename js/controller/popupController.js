@@ -28,4 +28,20 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 			}
 		});
 	};
+	
+	$scope.hasPriceReduced = function(data) {
+		var len = data.priceChangeInfo.length;
+		
+		if(len > 0) {
+			var priceChangeInfo = data.priceChangeInfo[len-1];
+			
+			if(priceChangeInfo.priceInfo.mainPrice < 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	};
 }]);

@@ -15,6 +15,10 @@
         width: 75px;
         height: 75px;
       }
+      
+      .priceReduced {
+      	    background-color: greenyellow;
+      }
     </style>
 
     <!--
@@ -41,7 +45,7 @@
   </head>
   <body ng-controller="PopupController">
   	<div style="display: block;width: 373px;height: 600px;">
-  		<div ng-repeat="(key, value) in data">
+  		<div ng-repeat="(key, value) in data" ng-class="{'priceReduced': hasPriceReduced(value)}">
   			<p style="background-color: gray;">{{value.details.name}}</p>
   			<a href="{{key}}" target="_blank">
   				<img ng-src="{{value.details.imageUrl}}"><br>
