@@ -21,7 +21,7 @@ var storage = {
 		});
 	},
 
-	updateKeyInCollection: function (collectionKey, key, value) {
+	updateKeyInCollection: function (collectionKey, key, value, callback) {
 		chrome.storage.sync.get(collectionKey, function (data) {
 			if(data[collectionKey] != null && data[collectionKey] != undefined) {
 				var map = data[collectionKey];
@@ -29,7 +29,10 @@ var storage = {
 					map[key] = value;
 					var store = {};
 					store[collectionKey] = map;
-					chrome.storage.sync.set(store);
+					if(callback != null)
+						chrome.storage.sync.set(store, callback);
+					else
+						chrome.storage.sync.set(store);
 				}
 			}
 		});

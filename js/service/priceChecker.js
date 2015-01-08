@@ -12,10 +12,14 @@ var priceChecker = {
 						if(!priceChangeInfo.isNull()) { // if any change 
 							info.priceChangeInfo.push(priceChangeInfo);
 							info.priceInfo = priceInfo;
-							storage.updateKeyInCollection(storageCollectionKey, link, info);
+							storage.updateKeyInCollection(storageCollectionKey, link, info, function() {
+								if(callBack != null)
+									callBack(priceChangeInfo);
+							});
+						} else {
+							if(callBack != null)
+								callBack(priceChangeInfo);
 						}
-						if(callBack != null)
-							callBack(priceChangeInfo);
 					}
 				});
 			},
