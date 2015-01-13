@@ -4,24 +4,26 @@ var priceChecker = {
 			url: link,
 			success: function (data) {
 				var priceInfo = model.getAllPrices(data);
-				storage.getFromCollection(storageCollectionKey, link, function (info) {
-					if(info != null) {
-						var oldPriceInfo = info.priceInfo;
-						var priceChangeInfo = priceChecker.comparePrice(oldPriceInfo, priceInfo);
-						
-						if(!priceChangeInfo.isNull()) { // if any change 
-							info.priceChangeInfo.push(priceChangeInfo);
-							info.priceInfo = priceInfo;
-							storage.updateKeyInCollection(storageCollectionKey, link, info, function() {
+				if(!priceInfo.isNull()) {
+					storage.getFromCollection(storageCollectionKey, link, function (info) {
+						if(info != null) {
+							var oldPriceInfo = info.priceInfo;
+							var priceChangeInfo = priceChecker.comparePrice(oldPriceInfo, priceInfo);
+							
+							if(!priceChangeInfo.isNull()) { // if any change 
+								info.priceChangeInfo.push(priceChangeInfo);
+								info.priceInfo = priceInfo;
+								storage.updateKeyInCollection(storageCollectionKey, link, info, function() {
+									if(callBack != null)
+										callBack(priceChangeInfo, info);
+								});
+							} else {
 								if(callBack != null)
-									callBack(priceChangeInfo);
-							});
-						} else {
-							if(callBack != null)
-								callBack(priceChangeInfo);
+									callBack(priceChangeInfo, info);
+							}
 						}
-					}
-				});
+					});
+				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				// TODO log errors

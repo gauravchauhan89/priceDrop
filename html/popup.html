@@ -2,6 +2,7 @@
 <html  ng-app="priceDropApp" ng-csp>
   <head>
     <title>Flipkart</title>
+    <link rel="stylesheet" href="../lib/third-party/angular-csp.css" type="text/css" />
     <style>
       body {
         min-width: 357px;
@@ -16,8 +17,20 @@
         height: 75px;
       }
       
-      .priceReduced {
+      .mainPriceReduced {
       	    background-color: greenyellow;
+      }
+      
+      .exchangePriceReduced {
+      	    background-color: yellow;
+      }
+      
+      .otherPriceReduced {
+      	    background-color: lawngreen;
+      }
+      
+      .mainPriceIncreased {
+      	    background-color: red;
       }
     </style>
 
@@ -45,12 +58,20 @@
   </head>
   <body ng-controller="PopupController">
   	<div style="display: block;width: 373px;height: 600px;">
-  		<div ng-repeat="(key, value) in data" ng-class="{'priceReduced': hasPriceReduced(value)}">
+  		<div ng-repeat="(key, value) in data" ng-class="{'mainPriceReduced': hasMainPriceReduced(value) == 1, 'exchangePriceReduced': hasMainPriceReduced(value) == 2, 'otherPriceReduced': hasMainPriceReduced(value) == 3, 'mainPriceIncreased': hasMainPriceIncreased(value)==1}">
   			<p style="background-color: gray;">{{value.details.name}}</p>
   			<a href="{{key}}" target="_blank">
   				<img ng-src="{{value.details.imageUrl}}"><br>
   				Main Price: 
   				<b>{{value.priceInfo.mainPrice}}</b>
+  				<div ng-show="{{value.priceInfo.exchangePrice != null}}">
+  					Exchange Price:
+  					<b>{{value.priceInfo.exchangePrice}}</b>
+  				</div>
+  				<div ng-show="{{value.priceInfo.otherPrice != null}}">
+  					Other Seller's Price:
+  					<b>{{value.priceInfo.otherPrice}}</b>
+  				</div>
   			</a>
   			<button ng-click="remove(key)">Remove</button>
   			<button ng-click="checkPriceChange(key)">Check</button>

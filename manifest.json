@@ -7,7 +7,8 @@
   "permissions": [
     "http://www.flipkart.com/",
     "http://code.jquery.com/",
-    "storage"
+    "storage",
+    "notifications"
   ],
   "browser_action": {
     "default_icon": "images/icon.png",
