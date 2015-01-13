@@ -64,3 +64,22 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 		}
 	};
 }]);
+
+priceDropApp.filter('searchFilter', function () {
+	return function (data, searchText) {
+		if(searchText != null && searchText.trim() != "") {
+			var result = {};
+			for(var key in data) {
+				if(data.hasOwnProperty(key)) {
+					var name = data[key].details.name;
+					if(name.toLowerCase().indexOf(searchText.toLowerCase()) != -1) {
+						result[key] = data[key];
+					}
+				}
+			}
+			return result;
+		} else {
+			return data;
+		}
+	};
+});

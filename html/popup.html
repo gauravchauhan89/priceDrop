@@ -58,7 +58,11 @@
   </head>
   <body ng-controller="PopupController">
   	<div style="display: block;width: 373px;height: 600px;">
-  		<div ng-repeat="(key, value) in data" ng-class="{'mainPriceReduced': hasMainPriceReduced(value) == 1, 'exchangePriceReduced': hasMainPriceReduced(value) == 2, 'otherPriceReduced': hasMainPriceReduced(value) == 3, 'mainPriceIncreased': hasMainPriceIncreased(value)==1}">
+  		<div>
+  			<label>Search:</label>
+  			<input type="text" ng-model="searchText"/>
+  		</div>
+  		<div ng-repeat="(key, value) in data | searchFilter: searchText" ng-class="{'mainPriceReduced': hasMainPriceReduced(value) == 1, 'exchangePriceReduced': hasMainPriceReduced(value) == 2, 'otherPriceReduced': hasMainPriceReduced(value) == 3, 'mainPriceIncreased': hasMainPriceIncreased(value)==1}">
   			<p style="background-color: gray;">{{value.details.name}}</p>
   			<a href="{{key}}" target="_blank">
   				<img ng-src="{{value.details.imageUrl}}"><br>
