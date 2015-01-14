@@ -1,4 +1,4 @@
-var priceDropApp = angular.module('priceDropApp', []);
+var priceDropApp = angular.module('priceDropApp', ['ngAnimate']);
 
 priceDropApp.controller('PopupController',['$scope', function ($scope) {
 	storage.getCollection('priceDropFlipkartData', function(data) {
@@ -72,7 +72,14 @@ priceDropApp.filter('searchFilter', function () {
 			for(var key in data) {
 				if(data.hasOwnProperty(key)) {
 					var name = data[key].details.name;
-					if(name.toLowerCase().indexOf(searchText.toLowerCase()) != -1) {
+					var searchArray = searchText.split(" ");
+					var matchCount = 0;
+					for(var i=0; i<searchArray.length; i++) {
+						if(name.toLowerCase().indexOf(searchArray[i].toLowerCase()) != -1) {
+							matchCount++;
+						}
+					}
+					if(matchCount == searchArray.length) {
 						result[key] = data[key];
 					}
 				}
