@@ -92,3 +92,9 @@ priceDropApp.filter('searchFilter', function () {
 		}
 	};
 });
+
+priceDropApp.filter('convertHTMLEntities', function() {
+    return function (text) {
+    	return text.replace(/&amp;/g, '&');
+    };
+});

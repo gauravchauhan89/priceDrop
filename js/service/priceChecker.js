@@ -7,7 +7,7 @@ var priceChecker = {
 				if(!priceInfo.isNull()) {
 					storage.getFromCollection(storageCollectionKey, link, function (data) {
 						if(data != null) {
-							var oldData = data;
+							var oldData = Data.prototype.cloneData(data);
 							var oldPriceInfo = oldData.priceInfo;
 							var priceChangeInfo = priceChecker.comparePrice(oldPriceInfo, priceInfo);
 							
@@ -24,6 +24,8 @@ var priceChecker = {
 							}
 						}
 					});
+				} else {
+					// TODO log this error
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
