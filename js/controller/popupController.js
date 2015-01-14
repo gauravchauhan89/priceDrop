@@ -7,7 +7,7 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 			$scope.$apply(function () {
 				$scope.data = data;
 			});
-		}, 500);
+		}, 1000);
 	});
 	
 	$scope.remove = function (key) {

@@ -47,15 +47,22 @@ FlipkartModel.prototype.getAllPrices = function (data) {
 		}
 			
 		// prices from other retailers
-		var min = 99999999999999999;
-		for(var i=otherPriceIndex; i<html.length; i++) {
-			var meta = $(html[i]).find("meta[itemprop='price']");
+		
+		if(otherPriceIndex < html.length) {
+			var meta = $(html[otherPriceIndex]).find("meta[itemprop='price']");
 			var price = Utils.parseInt(meta[0].getAttribute('content'));
-			if(price < min) {
-				min = price;
-				priceInfoObject.otherPrice = price;
-			}
+			priceInfoObject.otherPrice = price;
 		}
+		
+//		var min = 99999999999999999;
+//		for(var i=otherPriceIndex; i<html.length; i++) {
+//			var meta = $(html[i]).find("meta[itemprop='price']");
+//			var price = Utils.parseInt(meta[0].getAttribute('content'));
+//			if(price < min) {
+//				min = price;
+//				priceInfoObject.otherPrice = price;
+//			}
+//		}
 		
 		return priceInfoObject;
 	};

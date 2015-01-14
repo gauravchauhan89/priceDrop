@@ -7,8 +7,17 @@ function check() {
 					if(!priceChangeInfo.isNull()) {
 						// if price reduced
 						var info = oldData.details;
-						var oldPrice = oldData.priceInfo.mainPrice;
-						var notifyMessage = "Price of "+info.name+ " has changed from "+oldPrice+ " to "+(parseInt(oldPrice)+parseInt(priceChangeInfo.priceInfo.mainPrice));
+						var notifyMessage = "";
+						if(priceChangeInfo.priceInfo.mainPrice != null) {
+							var oldPrice = oldData.priceInfo.mainPrice;
+							notifyMessage = "Price of "+info.name+ " has changed from "+oldPrice+ " to "+(parseInt(oldPrice)+parseInt(priceChangeInfo.priceInfo.mainPrice));
+						} else if(priceChangeInfo.priceInfo.otherPrice != null) {
+							var oldPrice = oldData.priceInfo.otherPrice;
+							notifyMessage = "Other Price of "+info.name+ " has changed from "+oldPrice+ " to "+(parseInt(oldPrice)+parseInt(priceChangeInfo.priceInfo.otherPrice));
+						} else if(priceChangeInfo.priceInfo.exchangePrice != null) {
+							var oldPrice = oldData.priceInfo.exchangePrice;
+							notifyMessage = "Exchange Price of "+info.name+ " has changed from "+oldPrice+ " to "+(parseInt(oldPrice)+parseInt(priceChangeInfo.priceInfo.exchangePrice));
+						}
 						
 						chrome.notifications.create("", {type : "basic", iconUrl: "../images/icon.png", title: "Price Drop", message: notifyMessage}, function (id) {});
 					}
