@@ -2,10 +2,12 @@ var priceDropApp = angular.module('priceDropApp', ['ngAnimate']);
 
 priceDropApp.controller('PopupController',['$scope', function ($scope) {
 	storage.getCollection('priceDropFlipkartData', function(data) {
-		console.log(data);
-		$scope.$apply(function () {
-			$scope.data = data;
-		});
+		setTimeout(function () {
+			console.log(data);
+			$scope.$apply(function () {
+				$scope.data = data;
+			});
+		}, 500);
 	});
 	
 	$scope.remove = function (key) {
