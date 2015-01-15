@@ -18,23 +18,13 @@
         height: 33px;
       }
       
-      .close {
-		  font-size: 20px;
-		  font-weight: bold;
-		  line-height: 18px;
-		  color: #000000;
-		  text-shadow: 0 1px 0 #ffffff;
-		  opacity: 0.2;
-		  filter: alpha(opacity=20);
-		  text-decoration: none;
-		}
-		.close:hover {
-		  color: #000000;
-		  text-decoration: none;
-		  opacity: 0.4;
-		  filter: alpha(opacity=40);
-		  cursor: pointer;
-		}
+      .close_abs {
+      	position: absolute;
+		width: 100%;
+		align-content: stretch;
+		left: 310px;
+		top: -4px;
+      }
       
       .mainPriceReduced {
       	    background-color: greenyellow;
@@ -163,10 +153,10 @@
   		</div>
   		<div class="row">
 	  		<div class="col-sm-8 bootcards-cards">
-		  		<div ng-repeat="(key, value) in data | searchFilter: searchText" class="slide panel panel-default bootcards-summary" > <!-- ng-class="{'mainPriceReduced': hasMainPriceReduced(value) == 1, 'exchangePriceReduced': hasMainPriceReduced(value) == 2, 'otherPriceReduced': hasMainPriceReduced(value) == 3, 'mainPriceIncreased': hasMainPriceIncreased(value)==1}" -->
-		  			<div class="panel-heading" style="box-shadow: 0 0 7px #CCCCCC;">
+		  		<div ng-repeat="value in orderData(data) | searchFilter: searchText" class="slide panel panel-default bootcards-summary" > <!-- ng-class="{'mainPriceReduced': hasMainPriceReduced(value) == 1, 'exchangePriceReduced': hasMainPriceReduced(value) == 2, 'otherPriceReduced': hasMainPriceReduced(value) == 3, 'mainPriceIncreased': hasMainPriceIncreased(value)==1}" -->
+		  			<div class="panel-heading" style="box-shadow: 0 0 7px #CCCCCC; position: relative;">
 		  				<div class="row">
-		  					<span class="close" ng-click="remove(key)" style="float: right;">x</span>
+		  					<span class="close close_abs" ng-click="remove(value.key)">x</span>
 		  					<div class="col-xs-2 col-sm-4">
 		  						<img class="iconImg" src="../images/Flipkart.png"/>
 		  					</div>
@@ -176,7 +166,7 @@
 		  				</div>
 		  			</div>
 		  			<div class="panel-body">
-			  			<a href="{{key}}" target="_blank">
+			  			<a href="{{value.key}}" target="_blank">
 			  				<div class="col-xs-6 col-sm-4">
 			  					<img class="img-responsive" ng-src="{{value.details.imageUrl}}">
 			  				</div>
@@ -200,7 +190,7 @@
 		  			<div class="panel-footer">
 		  				<div class="btn-group btn-group-justified">
 		  					<div class="btn-group">
-		  						<button  class="btn btn-default" ng-click="checkPriceChange(key)">Check</button>
+		  						<button  class="btn btn-default" ng-click="checkPriceChange(value.key)">Check</button>
 		  					</div>
 		  				</div>
 		  			</div>

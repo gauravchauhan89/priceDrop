@@ -10,6 +10,24 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 		}, 1000);
 	});
 	
+	$scope.orderData = function (data) {
+		var priceReducedData = [];
+		var priceNoChangeData = [];
+		
+		for(var key in data) {
+			if(data.hasOwnProperty(key)) {
+				data[key].key = key;
+				if($scope.hasMainPriceReduced(data[key])) {
+					priceReducedData.push(data[key]);
+				} else {
+					priceNoChangeData.push(data[key]);
+				}
+			}
+		}
+		
+		return priceReducedData.concat(priceNoChangeData);
+	};
+	
 	$scope.remove = function (key) {
 		storage.removeFromCollection('priceDropFlipkartData', key, function () {
 			storage.getCollection('priceDropFlipkartData', function(data) {
@@ -70,20 +88,18 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 priceDropApp.filter('searchFilter', function () {
 	return function (data, searchText) {
 		if(searchText != null && searchText.trim() != "") {
-			var result = {};
-			for(var key in data) {
-				if(data.hasOwnProperty(key)) {
-					var name = data[key].details.name;
-					var searchArray = searchText.split(" ");
-					var matchCount = 0;
-					for(var i=0; i<searchArray.length; i++) {
-						if(name.toLowerCase().indexOf(searchArray[i].toLowerCase()) != -1) {
-							matchCount++;
-						}
+			var result = [];
+			for(var i=0;i<data.length;i++) {
+				var name = data[i].details.name;
+				var searchArray = searchText.split(" ");
+				var matchCount = 0;
+				for(var j=0; j<searchArray.length; j++) {
+					if(name.toLowerCase().indexOf(searchArray[j].toLowerCase()) != -1) {
+						matchCount++;
 					}
-					if(matchCount == searchArray.length) {
-						result[key] = data[key];
-					}
+				}
+				if(matchCount == searchArray.length) {
+					result.push(data[i]);
 				}
 			}
 			return result;
