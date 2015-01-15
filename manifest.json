@@ -23,13 +23,13 @@
       "js": ["lib/third-party/jquery-2.1.1.min.js",
       		 "lib/third-party/jquery.xpath.js", 
       		 "lib/common.js",
-      		 "js/contentScript/flipkartScript.js", 
       		 "js/model/BaseModel.js", 
       		 "js/model/FlipkartModel.js",
       		 "js/model/PriceInfo.js", 
       		 "js/model/Data.js",
       		 "js/model/Details.js", 
-      		 "js/service/storage.js"]
+      		 "js/service/storage.js",
+      		 "js/contentScript/flipkartScript.js"]
     }
   ]
 }
