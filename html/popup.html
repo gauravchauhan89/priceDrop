@@ -136,6 +136,7 @@
      <script src="../js/model/PriceInfo.js"></script>
      <script src="../js/model/PriceChangeInfo.js"></script>
      <script src="../js/model/Details.js"></script>
+     <script src="../js/model/Settings.js"></script>
      <script src="../js/model/FlipkartModel.js"></script>
      <script src="../js/controller/popupController.js"></script>
   </head>
@@ -153,10 +154,10 @@
   		</div>
   		<div class="row">
 	  		<div class="col-sm-8 bootcards-cards">
-		  		<div ng-repeat="value in orderData(data) | searchFilter: searchText" class="slide panel panel-default bootcards-summary" > <!-- ng-class="{'mainPriceReduced': hasMainPriceReduced(value) == 1, 'exchangePriceReduced': hasMainPriceReduced(value) == 2, 'otherPriceReduced': hasMainPriceReduced(value) == 3, 'mainPriceIncreased': hasMainPriceIncreased(value)==1}" -->
+		  		<div ng-repeat="value in data | orderData:this | searchFilter: searchText" class="slide panel panel-default bootcards-summary" > <!-- ng-class="{'mainPriceReduced': hasMainPriceReduced(value) == 1, 'exchangePriceReduced': hasMainPriceReduced(value) == 2, 'otherPriceReduced': hasMainPriceReduced(value) == 3, 'mainPriceIncreased': hasMainPriceIncreased(value)==1}" -->
 		  			<div class="panel-heading" style="box-shadow: 0 0 7px #CCCCCC; position: relative;">
 		  				<div class="row">
-		  					<span class="close close_abs" ng-click="remove(value.key)">x</span>
+		  					<span class="close close_abs" ng-click="remove(value.details.id)">x</span>
 		  					<div class="col-xs-2 col-sm-4">
 		  						<img class="iconImg" src="../images/Flipkart.png"/>
 		  					</div>
@@ -166,7 +167,7 @@
 		  				</div>
 		  			</div>
 		  			<div class="panel-body">
-			  			<a href="{{value.key}}" target="_blank">
+			  			<a href="{{value.details.url}}" target="_blank">
 			  				<div class="col-xs-6 col-sm-4">
 			  					<img class="img-responsive" ng-src="{{value.details.imageUrl}}">
 			  				</div>
@@ -190,7 +191,7 @@
 		  			<div class="panel-footer">
 		  				<div class="btn-group btn-group-justified">
 		  					<div class="btn-group">
-		  						<button  class="btn btn-default" ng-click="checkPriceChange(value.key)">Check</button>
+		  						<button  class="btn btn-default" ng-click="checkPriceChange(value.details.id)">Check</button>
 		  					</div>
 		  				</div>
 		  			</div>

@@ -1,4 +1,5 @@
 function Details() {
+	this.id = null;
 	this.name = null;
 	this.type = null;
 	this.url = null;
@@ -7,6 +8,7 @@ function Details() {
 }
 
 Details.prototype = {
+		id: null,
 		name: null,
 		type: null,			// website type like flipkart or amazon
 		url: null,

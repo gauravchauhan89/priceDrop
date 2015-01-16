@@ -1,27 +1,28 @@
+function checkerCallback(priceChangeInfo, oldData) {
+	if(!priceChangeInfo.isNull()) {
+		//if price reduced
+		var info = oldData.details;
+		var notifyMessage = "";
+		if(priceChangeInfo.priceInfo.mainPrice !== null && parseInt(priceChangeInfo.priceInfo.mainPrice) < 0) {
+			var oldPrice = oldData.priceInfo.mainPrice;
+			if(oldData.settings.showNotification && parseInt(oldPrice)+parseInt(priceChangeInfo.priceInfo.mainPrice) < parseInt(oldData.settings.notificationAmount)) {
+				notifyMessage = "Price of "+info.name+ " has changed from "+oldPrice+ " to "+(parseInt(oldPrice)+parseInt(priceChangeInfo.priceInfo.mainPrice));
+				// TODO set new amount as notification amount
+			}
+		}
+						
+		if(notifyMessage !== "") {
+			chrome.notifications.create("", {type : "basic", iconUrl: "../images/icon.png", title: "Price Drop", message: notifyMessage}, function (id) {});
+		}
+	}
+}
+
 function check() {
 	storage.getCollection('priceDropFlipkartData', function (data) {
 		for(var key in data) {
-			console.log("In backgroud: "+key);
 			if(data.hasOwnProperty(key)) {
-				priceChecker.check(key, new FlipkartModel(), 'priceDropFlipkartData', function (priceChangeInfo, oldData) {
-					if(!priceChangeInfo.isNull()) {
-						// if price reduced
-						var info = oldData.details;
-						var notifyMessage = "";
-						if(priceChangeInfo.priceInfo.mainPrice != null) {
-							var oldPrice = oldData.priceInfo.mainPrice;
-							notifyMessage = "Price of "+info.name+ " has changed from "+oldPrice+ " to "+(parseInt(oldPrice)+parseInt(priceChangeInfo.priceInfo.mainPrice));
-						} else if(priceChangeInfo.priceInfo.otherPrice != null) {
-							var oldPrice = oldData.priceInfo.otherPrice;
-							notifyMessage = "Other Price of "+info.name+ " has changed from "+oldPrice+ " to "+(parseInt(oldPrice)+parseInt(priceChangeInfo.priceInfo.otherPrice));
-						} else if(priceChangeInfo.priceInfo.exchangePrice != null) {
-							var oldPrice = oldData.priceInfo.exchangePrice;
-							notifyMessage = "Exchange Price of "+info.name+ " has changed from "+oldPrice+ " to "+(parseInt(oldPrice)+parseInt(priceChangeInfo.priceInfo.exchangePrice));
-						}
-						
-						chrome.notifications.create("", {type : "basic", iconUrl: "../images/icon.png", title: "Price Drop", message: notifyMessage}, function (id) {});
-					}
-				});
+				console.log("In backgroud: "+key);
+				priceChecker.check(key, new FlipkartModel(), 'priceDropFlipkartData', checkerCallback);
 			}
 		}
 	});

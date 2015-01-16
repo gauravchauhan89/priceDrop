@@ -10,30 +10,10 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 		}, 1000);
 	});
 	
-	$scope.orderData = function (data) {
-		var priceReducedData = [];
-		var priceNoChangeData = [];
-		
-		for(var key in data) {
-			if(data.hasOwnProperty(key)) {
-				data[key].key = key;
-				if($scope.hasMainPriceReduced(data[key])) {
-					priceReducedData.push(data[key]);
-				} else {
-					priceNoChangeData.push(data[key]);
-				}
-			}
-		}
-		
-		return priceReducedData.concat(priceNoChangeData);
-	};
-	
 	$scope.remove = function (key) {
 		storage.removeFromCollection('priceDropFlipkartData', key, function () {
-			storage.getCollection('priceDropFlipkartData', function(data) {
-				$scope.$apply(function () {
-					$scope.data = data;
-				});
+			$scope.$apply(function () {
+				delete $scope.data[key];
 			});
 		});
 	};
@@ -41,10 +21,12 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 	$scope.checkPriceChange = function (key) {
 		priceChecker.check(key, new FlipkartModel(), 'priceDropFlipkartData', function (priceChangeInfo, oldValue) {
 			if(!priceChangeInfo.isNull()) {
-				storage.getCollection('priceDropFlipkartData', function(data) {
-					$scope.$apply(function () {
-						$scope.data = data;
-					});
+				storage.getFromCollection('priceDropFlipkartData', key, function(data) {
+					if(data != null) {
+						$scope.$apply(function () {
+							$scope.data[key] = data;
+						});
+					}
 				});
 			}
 		});
@@ -113,4 +95,23 @@ priceDropApp.filter('convertHTMLEntities', function() {
     return function (text) {
     	return text.replace(/&amp;/g, '&');
     };
+});
+
+priceDropApp.filter('orderData', function() {
+	return function (data, scope) {
+		var orderedList = [];
+		var priceNoChangeData = [];
+		
+		for(var key in data) {
+			if(data.hasOwnProperty(key)) {
+				if(scope.hasMainPriceReduced(data[key])) {
+					orderedList.push(data[key]);
+				} else {
+					priceNoChangeData.push(data[key]);
+				}
+			}
+		}
+		
+		return orderedList.concat(priceNoChangeData);
+	};
 });

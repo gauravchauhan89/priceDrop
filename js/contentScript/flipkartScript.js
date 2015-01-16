@@ -4,10 +4,13 @@ function addToStore() {
 	var allPrices = flipkartDto.getAllPrices(document);
 	var details = flipkartDto.getDetails(document);
 	details.url = url;
+	details.id = url;
 	
 	var data = new Data();
 	data.priceInfo = allPrices;
 	data.details = details;
+	data.settings = new Settings();
+	data.settings.notificationAmount = data.priceInfo.mainPrice;
 	
 	storage.addToCollection('priceDropFlipkartData', url, data);
 	input.className += " disabled";
