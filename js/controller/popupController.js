@@ -1,6 +1,7 @@
-var priceDropApp = angular.module('priceDropApp', ['ngAnimate']);
+var priceDropApp = angular.module('priceDropApp', ['ngAnimate','angularUtils.directives.dirPagination']);
 
 priceDropApp.controller('PopupController',['$scope', function ($scope) {
+	$scope.productsPerPage = 3;
 	storage.getCollection('priceDropFlipkartData', function(data) {
 		setTimeout(function () {
 			console.log(data);

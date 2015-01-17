@@ -82,13 +82,13 @@
 	.slide.ng-move.ng-move-active {
   		opacity:1;
 	}
-	
+	/* 
 	.slide.ng-leave {
 	  -webkit-animation:0.5s my_animation;
 	  -moz-animation:0.5s my_animation;
 	  -o-animation:0.5s my_animation;
 	  animation:0.5s my_animation;
-	}
+	} */
 	
 	@keyframes my_animation {
 	  from { opacity:1; }
@@ -127,6 +127,7 @@
      <script src="../lib/third-party/angular-animate.js"></script>
      <script src="../lib/third-party/bootstrap.min.js"></script>
      <script src="../lib/third-party/bootcards.min.js"></script>
+     <script src="../lib/third-party/dirPagination.js"></script>
      <script src="../lib/xpath.js"></script>
      <script src="../lib/common.js"></script>
      <script src="../js/service/storage.js"></script>
@@ -153,8 +154,13 @@
 	  		</div>
   		</div>
   		<div class="row">
+  			<div class="col-sm-7">
+  				<dir-pagination-controls boundary-links="true" template-url="dirPagination.tpl.html"></dir-pagination-controls>
+  			</div>
+  		</div>
+  		<div class="row">
 	  		<div class="col-sm-8 bootcards-cards">
-		  		<div ng-repeat="value in data | orderData:this | searchFilter: searchText" class="slide panel panel-default bootcards-summary" > <!-- ng-class="{'mainPriceReduced': hasMainPriceReduced(value) == 1, 'exchangePriceReduced': hasMainPriceReduced(value) == 2, 'otherPriceReduced': hasMainPriceReduced(value) == 3, 'mainPriceIncreased': hasMainPriceIncreased(value)==1}" -->
+		  		<div dir-paginate="value in data | orderData:this | searchFilter: searchText | itemsPerPage: productsPerPage" class="slide panel panel-default bootcards-summary" > <!-- ng-class="{'mainPriceReduced': hasMainPriceReduced(value) == 1, 'exchangePriceReduced': hasMainPriceReduced(value) == 2, 'otherPriceReduced': hasMainPriceReduced(value) == 3, 'mainPriceIncreased': hasMainPriceIncreased(value)==1}" -->
 		  			<div class="panel-heading" style="box-shadow: 0 0 7px #CCCCCC; position: relative;">
 		  				<div class="row">
 		  					<span class="close close_abs" ng-click="remove(value.details.id)">x</span>
@@ -198,6 +204,11 @@
 		  		</div>
 	  		</div>
 	  	</div>
+	  	<div class="row">
+  			<div class="col-sm-7">
+  				<dir-pagination-controls boundary-links="true" template-url="dirPagination.tpl.html"></dir-pagination-controls>
+  			</div>
+  		</div>
   	</div>
   	<div id="flipkart-list">
   	</div>
