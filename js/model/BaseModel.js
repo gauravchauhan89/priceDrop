@@ -11,7 +11,7 @@ BaseModel.prototype = {
 		/**
 		 * @return PriceInfo
 		 */
-		getAllPrices : function () {
+		getAllSellers : function () {
 			throw new Error("Abstract method!");
 		},
 

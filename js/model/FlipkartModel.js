@@ -20,51 +20,92 @@ FlipkartModel.prototype.getDetails = function (data) {
 		return details;
 };
 
-FlipkartModel.prototype.getAllPrices = function (data) {
-		var exchangeInfo = this.checkForExchangeOffer(data);
+FlipkartModel.prototype.getAllSellers = function (data) {
+		var isOutStock = $(data).find(".out-of-stock-wrap");
+		if(isOutStock != undefined && isOutStock.length != 0) {
+			throw new OutOfStockException();
+		}
 		
-		var priceInfoObject = new PriceInfo();
-		var html = $(data).find("div[itemprop='offers']");
-		var otherPriceIndex = 0;
+		if($(data).find("[itemprop='name']") == undefined) {
+			// page is not loaded properly
+			throw "Page is not properly loaded.";
+		}
 		
-		if(exchangeInfo == null) {
-			// if exchange offer is not going on, then first element is price by WS Retail (main seller of flipkart)
-			if(html.length != 0) {
-				var meta = $(html[0]).find("meta[itemprop='price']");
-				var price = Utils.parseInt(meta[0].getAttribute('content'));
-				var sellingPrice = $(html[0]).find(".selling-price.omniture-field")[0].getAttribute("data-evar48");
-				otherPriceIndex = 1;
+		var sellers = [];
+		var sellerWrap = $(data).find(".seller-table-wrap")[0];
+		if(sellerWrap != undefined) {
+			var sellerTable = JSON.parse(sellerWrap.getAttribute('data-config'));
+			console.log(sellerTable);
+			for(var i=0;i<sellerTable['dataModel'].length;i++) {
+				var sellerFromFlipkart = sellerTable['dataModel'][i];
+				var seller = new Seller();
+				seller.name = sellerFromFlipkart['sellerInfo']['name'];
+				seller.rating = sellerFromFlipkart['sellerRatingInfo']['ratingOutOfFive'];
+				seller.isNewSeller = sellerFromFlipkart['sellerRatingInfo']['isNewSeller'];
+				seller.price = sellerFromFlipkart['priceInfo']['sellingPrice'];
+				seller.priceHistory = [];
+				for(var j=0;j<sellerFromFlipkart['offerInfo']['listingOffers'].length;j++) {
+					seller.offers.push(sellerFromFlipkart['offerInfo']['listingOffers'][j]['description']);
+					if(sellerFromFlipkart['offerInfo']['listingOffers'][j]['exchange']) {
+						seller.exchangeOffer = true;
+					}
+				}
 				
-				if(sellingPrice < price)
-					price = sellingPrice;
-				
-				priceInfoObject.mainPrice = price;
+				sellers.push(seller);
 			}
-		} else {
-			// else mainPrice
-			priceInfoObject.mainPrice = exchangeInfo.mainPrice;
-			priceInfoObject.exchangePrice = exchangeInfo.exchangePrice;
-		}
 			
-		// prices from other retailers
-		
-		if(otherPriceIndex < html.length) {
-			var meta = $(html[otherPriceIndex]).find("meta[itemprop='price']");
-			var price = Utils.parseInt(meta[0].getAttribute('content'));
-			priceInfoObject.otherPrice = price;
+			console.log(sellers);
+		} else {
+			console.log("1/0 Seller!!");
+
+			// 1 Seller
+			
+			var sellerDiv = $(data).find(".seller-badge-wrap")[0];
+			if(sellerDiv != undefined) {
+				var seller = new Seller();
+				seller.name = $(sellerDiv).find(".seller-name")[0].innerHTML;
+				seller.rating = $(sellerDiv).find(".rating-out-of-five")[0].innerHTML.trim().split("/")[0].trim();
+				seller.isNewSeller = false;
+				seller.priceHistory = [];
+				var offerWrap = $(data).find(".offers-info-wrap")[0];
+				if(offerWrap != undefined) {
+					var offerDiv = $(offerWrap).find(".offers")[0];
+					if(offerDiv != undefined) {
+						var offers = $(offerDiv).find(".offer-text");
+						for(var i=0;i<offers.length;i++) {
+							seller.offers.push(offers[i].innerHTML.trim());
+						}
+					}
+				}
+				
+				var exchangeInfo = this.checkForExchangeOffer(data);
+				if(exchangeInfo == null) {
+					seller.exchangeOffer = false;
+					
+					var html = $(data).find("div[itemprop='offers']");
+					if(html.length != 0) {
+						var meta = $(html[0]).find("meta[itemprop='price']");
+						var price = Utils.parseInt(meta[0].getAttribute('content'));
+						var sellingPrice = $(html[0]).find(".selling-price.omniture-field")[0].getAttribute("data-evar48");
+						
+						if(sellingPrice < price)
+							seller.price = sellingPrice;
+					}
+				} else {
+					seller.exchangeOffer = true;
+					seller.price = exchangeInfo.mainPrice;
+					seller.exchangePrice = exchangeInfo.exchangePrice;
+				}
+				
+				sellers.push(seller);
+			} else {
+				// 0 seller
+			}
+			
+			console.log(sellers);
 		}
 		
-//		var min = 99999999999999999;
-//		for(var i=otherPriceIndex; i<html.length; i++) {
-//			var meta = $(html[i]).find("meta[itemprop='price']");
-//			var price = Utils.parseInt(meta[0].getAttribute('content'));
-//			if(price < min) {
-//				min = price;
-//				priceInfoObject.otherPrice = price;
-//			}
-//		}
-		
-		return priceInfoObject;
+		return sellers;
 	};
 		
 FlipkartModel.prototype.checkForExchangeOffer = function (data) {

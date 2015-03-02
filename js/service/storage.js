@@ -1,7 +1,7 @@
 var storage = {
 	addToCollection : function (collectionKey, key, value) {
 		
-		chrome.storage.sync.get(collectionKey, function (data) {
+		chrome.storage.local.get(collectionKey, function (data) {
 			
 			if(data[collectionKey] != null && data[collectionKey] != undefined) {
 				var map = data[collectionKey];
@@ -9,20 +9,20 @@ var storage = {
 					map[key] = value;
 					var store = {};
 					store[collectionKey] = map;
-					chrome.storage.sync.set(store);
+					chrome.storage.local.set(store);
 				}
 			} else {
 				var map = {};
 				map[key] = value;
 				var store = {};
 				store[collectionKey] = map;
-				chrome.storage.sync.set(store);
+				chrome.storage.local.set(store);
 			}
 		});
 	},
 
 	updateKeyInCollection: function (collectionKey, key, value, callback) {
-		chrome.storage.sync.get(collectionKey, function (data) {
+		chrome.storage.local.get(collectionKey, function (data) {
 			if(data[collectionKey] != null && data[collectionKey] != undefined) {
 				var map = data[collectionKey];
 				if(map.hasOwnProperty(key)) {
@@ -30,26 +30,30 @@ var storage = {
 					var store = {};
 					store[collectionKey] = map;
 					if(callback != null)
-						chrome.storage.sync.set(store, callback);
+						chrome.storage.local.set(store, callback);
 					else
-						chrome.storage.sync.set(store);
+						chrome.storage.local.set(store);
 				}
 			}
 		});
 	},
 	
 	getCollection : function (collectionKey, callBack) {
-		chrome.storage.sync.get(collectionKey, function (data) {
+		chrome.storage.local.get(collectionKey, function (data) {
 			callBack(data[collectionKey]);
 		});
 	},
 	
 	getFromCollection : function (collectionKey, key, callBack) {
-		chrome.storage.sync.get(collectionKey, function (data) {
+		chrome.storage.local.get(collectionKey, function (data) {
 			var map = data[collectionKey];
 			
-			if(map.hasOwnProperty(key)) {
-				callBack(map[key]);
+			if(map != null) {
+				if(map.hasOwnProperty(key)) {
+					callBack(map[key]);
+				} else {
+					callBack(null);
+				}
 			} else {
 				callBack(null);
 			}
@@ -57,14 +61,14 @@ var storage = {
 	},
 	
 	removeFromCollection : function (collectionKey, key, successCallBack, failureCallBack) {
-		chrome.storage.sync.get(collectionKey, function (data) {
+		chrome.storage.local.get(collectionKey, function (data) {
 			var map = data[collectionKey];
 			
 			if(map.hasOwnProperty(key)) {
 				delete map[key];
 				var store = {};
 				store[collectionKey] = map;
-				chrome.storage.sync.set(store, function () {
+				chrome.storage.local.set(store, function () {
 					if(chrome.runtime.lastError == undefined) {
 						if(successCallBack != null)
 							successCallBack();

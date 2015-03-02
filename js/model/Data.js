@@ -1,15 +1,17 @@
 function Data() {
 	this.details = null;
-	this.priceInfo = null;
-	this.priceChangeInfo = [];
+	this.sellerInfos = [];
+	this.minSellerInfo = null;
 	this.settings = null;
+	this.isInStock = null;
 }
 
 Data.prototype = {
 		details: null,
-		priceInfo: null,
+		sellerInfos: null,
+		minSellerInfo: null,
 		settings: null,
-		priceChangeInfo: null,
+		isInStock: null,
 		cloneData: function(data) {
 			var newData = new Data();
 			newData.details = new Details();
@@ -19,21 +21,8 @@ Data.prototype = {
 				}
 			}
 			
-			newData.priceInfo = new PriceInfo();
-			for(key in newData.priceInfo) {
-				if(newData.priceInfo.hasOwnProperty(key)) {
-					newData.priceInfo[key] = data.priceInfo[key];
-				}
-			}
-			
-			for(var i=0; i<data.priceChangeInfo.length; i++) {
-				var priceChangeInfo = new PriceChangeInfo();
-				for(key in priceChangeInfo) {
-					if(priceChangeInfo.hasOwnProperty(key)) {
-						priceChangeInfo[key] = data.priceChangeInfo[i][key];
-					}
-				}
-				newData.priceChangeInfo.push(priceChangeInfo);
+			for(var i=0; i<data.sellerInfos.length; i++) {
+				newData.sellerInfos.push(Seller.clone(data.sellerInfos[i]));
 			}
 			
 			newData.settings = new Settings();
@@ -42,6 +31,8 @@ Data.prototype = {
 					newData.settings[key] = data.settings[key];
 				}
 			}
+			
+			newData.minSellerInfo = MinSeller.clone(data.minSellerInfo);
 			
 			return newData;
 		}

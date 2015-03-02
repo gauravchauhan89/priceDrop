@@ -6,7 +6,6 @@
   "version": "0.1",
   "permissions": [
     "http://www.flipkart.com/",
-    "http://code.jquery.com/",
     "storage",
     "notifications"
   ],
@@ -28,6 +27,10 @@
       		 "js/model/PriceInfo.js", 
       		 "js/model/Data.js",
       		 "js/model/Details.js", 
+      		 "js/model/Seller.js",
+      		 "js/model/MinSeller.js",
+      		 "js/model/PriceHistory.js",
+      		 "js/model/OutOfStockException.js",
       		 "js/model/Settings.js", 
       		 "js/service/storage.js",
       		 "js/contentScript/flipkartScript.js"]

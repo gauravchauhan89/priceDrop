@@ -2,30 +2,33 @@ var priceDropApp = angular.module('priceDropApp', ['ngAnimate','angularUtils.dir
 
 priceDropApp.controller('PopupController',['$scope', function ($scope) {
 	$scope.productsPerPage = 3;
-	storage.getCollection('priceDropFlipkartData', function(data) {
+	storage.getCollection(flipkartDataKey, function(data) {
 		setTimeout(function () {
 			console.log(data);
 			$scope.$apply(function () {
-				$scope.data = data;
+				$scope.data = data,$scope;
 			});
 		}, 1000);
 	});
 	
-	$scope.remove = function (key) {
-		storage.removeFromCollection('priceDropFlipkartData', key, function () {
+	$scope.remove = function (value) {
+		storage.removeFromCollection('priceDropFlipkartData', value.details.id, function () {
 			$scope.$apply(function () {
-				delete $scope.data[key];
+				var index = $scope.data.indexOf(value);
+				$scope.data.splice(index,1);
 			});
 		});
 	};
 	
-	$scope.checkPriceChange = function (key) {
-		priceChecker.check(key, new FlipkartModel(), 'priceDropFlipkartData', function (priceChangeInfo, oldValue) {
+	$scope.checkPriceChange = function (value) {
+		console.log($scope);
+		priceChecker.check(value.details.url, new FlipkartModel(), 'priceDropFlipkartData', function (priceChangeInfo, oldValue) {
 			if(!priceChangeInfo.isNull()) {
-				storage.getFromCollection('priceDropFlipkartData', key, function(data) {
+				storage.getFromCollection('priceDropFlipkartData', value.details.id, function(data) {
 					if(data != null) {
 						$scope.$apply(function () {
-							$scope.data[key] = data;
+							var index = $scope.data.indexOf(value);
+							$scope.data[index] = data;
 						});
 					}
 				});
@@ -66,6 +69,23 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 			return 0;
 		}
 	};
+	
+	$scope.orderData = function (data, scope) {
+		var orderedList = [];
+		var priceNoChangeData = [];
+		
+		for(var key in data) {
+			if(data.hasOwnProperty(key)) {
+				if(scope.hasMainPriceReduced(data[key])) {
+					orderedList.push(data[key]);
+				} else {
+					priceNoChangeData.push(data[key]);
+				}
+			}
+		}
+		
+		return orderedList.concat(priceNoChangeData);
+	};
 }]);
 
 priceDropApp.filter('searchFilter', function () {
@@ -98,21 +118,24 @@ priceDropApp.filter('convertHTMLEntities', function() {
     };
 });
 
-priceDropApp.filter('orderData', function() {
-	return function (data, scope) {
-		var orderedList = [];
-		var priceNoChangeData = [];
-		
-		for(var key in data) {
-			if(data.hasOwnProperty(key)) {
-				if(scope.hasMainPriceReduced(data[key])) {
-					orderedList.push(data[key]);
-				} else {
-					priceNoChangeData.push(data[key]);
-				}
-			}
-		}
-		
-		return orderedList.concat(priceNoChangeData);
+//
+//setTimeout(function () {
+//var ctx = document.getElementById("myChart").getContext("2d");
+//var myNewChart = new Chart(ctx).Line(data,{datasetFill : false});
+//}, 2000);
+
+var data = {
+	    labels: ["January", "February", "March", "April", "May", "June", "July"],
+	    datasets: [
+	        {
+	            label: "My Second dataset",
+	            fillColor: "rgba(151,187,205,0.2)",
+	            strokeColor: "rgba(151,187,205,1)",
+	            pointColor: "rgba(151,187,205,1)",
+	            pointStrokeColor: "#fff",
+	            pointHighlightFill: "#fff",
+	            pointHighlightStroke: "rgba(151,187,205,1)",
+	            data: [28, 48, 40, 19, 86, 27, 90]
+	        }
+	    ]
 	};
-});

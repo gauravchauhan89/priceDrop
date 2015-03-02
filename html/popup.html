@@ -128,6 +128,7 @@
      <script src="../lib/third-party/bootstrap.min.js"></script>
      <script src="../lib/third-party/bootcards.min.js"></script>
      <script src="../lib/third-party/dirPagination.js"></script>
+     <script src="../lib/third-party/Chart.js"></script>
      <script src="../lib/xpath.js"></script>
      <script src="../lib/common.js"></script>
      <script src="../js/service/storage.js"></script>
@@ -139,10 +140,15 @@
      <script src="../js/model/Details.js"></script>
      <script src="../js/model/Settings.js"></script>
      <script src="../js/model/FlipkartModel.js"></script>
+     <script src="../js/model/Seller.js"></script>
+     <script src="../js/model/MinSeller.js"></script>
+     <script src="../js/model/PriceHistory.js"></script>
+     <script src="../js/model/OutOfStockException.js"></script>
      <script src="../js/controller/popupController.js"></script>
   </head>
   <body ng-controller="PopupController">
   	<div class="container">
+  	<!-- <canvas id="myChart" width="300" height="200"></canvas> -->
   		<div class="row">
 	  		<div class="search-form">
 				<div class="col-sm-7">
@@ -160,10 +166,10 @@
   		</div>
   		<div class="row">
 	  		<div class="col-sm-8 bootcards-cards">
-		  		<div dir-paginate="value in data | orderData:this | searchFilter: searchText | itemsPerPage: productsPerPage" class="slide panel panel-default bootcards-summary" > <!-- ng-class="{'mainPriceReduced': hasMainPriceReduced(value) == 1, 'exchangePriceReduced': hasMainPriceReduced(value) == 2, 'otherPriceReduced': hasMainPriceReduced(value) == 3, 'mainPriceIncreased': hasMainPriceIncreased(value)==1}" -->
+		  		<div dir-paginate="(key, value) in data | itemsPerPage: productsPerPage" class="slide panel panel-default bootcards-summary" > <!-- ng-class="{'mainPriceReduced': hasMainPriceReduced(value) == 1, 'exchangePriceReduced': hasMainPriceReduced(value) == 2, 'otherPriceReduced': hasMainPriceReduced(value) == 3, 'mainPriceIncreased': hasMainPriceIncreased(value)==1}" -->
 		  			<div class="panel-heading" style="box-shadow: 0 0 7px #CCCCCC; position: relative;">
 		  				<div class="row">
-		  					<span class="close close_abs" ng-click="remove(value.details.id)">x</span>
+		  					<!-- <span class="close close_abs" ng-click="remove(value)">x</span> -->
 		  					<div class="col-xs-2 col-sm-4">
 		  						<img class="iconImg" src="../images/Flipkart.png"/>
 		  					</div>
@@ -177,27 +183,51 @@
 			  				<div class="col-xs-6 col-sm-4">
 			  					<img class="img-responsive" ng-src="{{value.details.imageUrl}}">
 			  				</div>
+			  			</a>
 			  				<div class="col-xs-6 col-sm-4">
-			  					<span class="PriceReduced" ng-show="hasMainPriceReduced(value) == 1">Reduced!!</span>
-			  					<span class="PriceIncrease" ng-show="hasMainPriceIncreased(value) == 1">Increased!!</span>
-			  					<div>
+			  					<!-- <span class="PriceReduced" ng-show="hasMainPriceReduced(value) == 1">Reduced!!</span> -->
+			  					<!-- <span class="PriceIncrease" ng-show="hasMainPriceIncreased(value) == 1">Increased!!</span> -->
+			  					<!-- <div>
 				  					<h3>Rs. <span class="label label-info">{{value.priceInfo.mainPrice}}</span></h3>
-				  				</div>
-				  				<div ng-show="{{value.priceInfo.exchangePrice != null}}">
+				  				</div> -->
+				  				<!-- <div ng-show="{{value.priceInfo.exchangePrice != null}}">
 				  					Exchange Price:
 				  					<b>{{value.priceInfo.exchangePrice}}</b>
 				  				</div>
 				  				<div ng-show="{{value.priceInfo.otherPrice != null}}">
 				  					Other Seller's Price:
 				  					<b>{{value.priceInfo.otherPrice}}</b>
-				  				</div>
+				  				</div> -->
 			  				</div>
-			  			</a>
+			  				<table class="table table-hover table-striped table-bordered">
+				  					<tr>
+				  						<th style="padding: 5px;">
+				  							Seller Name
+				  						</th>
+				  						<th style="padding: 5px;">
+				  							Price
+				  						</th>
+				  						<th style="padding: 5px;">
+				  							Rating
+				  						</th>
+				  					</tr>
+				  					<tr ng-repeat="seller in value.sellerInfos" ng-class="{'danger':seller.isAvailable==false}">
+				  						<td style="padding: 5px;">
+				  							{{seller.name}}
+				  						</td>
+				  						<td style="padding: 5px;">
+				  							{{seller.price}}
+				  						</td>
+				  						<td style="padding: 5px;">
+				  							{{seller.rating}}
+				  						</td>
+				  					</tr>
+				  				</table>
 		  			</div>
 		  			<div class="panel-footer">
 		  				<div class="btn-group btn-group-justified">
 		  					<div class="btn-group">
-		  						<button  class="btn btn-default" ng-click="checkPriceChange(value.details.id)">Check</button>
+		  						<!-- <button  class="btn btn-default" ng-click="checkPriceChange(value)">Check</button> -->
 		  					</div>
 		  				</div>
 		  			</div>
