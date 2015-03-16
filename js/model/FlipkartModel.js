@@ -85,10 +85,10 @@ FlipkartModel.prototype.getAllSellers = function (data) {
 					var html = $(data).find("div[itemprop='offers']");
 					if(html.length != 0) {
 						var meta = $(html[0]).find("meta[itemprop='price']");
-						var price = Utils.parseInt(meta[0].getAttribute('content'));
+						seller.price = Utils.parseInt(meta[0].getAttribute('content'));
 						var sellingPrice = $(html[0]).find(".selling-price.omniture-field")[0].getAttribute("data-evar48");
 						
-						if(sellingPrice < price)
+						if(sellingPrice < seller.price)
 							seller.price = sellingPrice;
 					}
 				} else {

@@ -14,8 +14,13 @@ var priceChecker = {
 								var sellerFormPage = priceChecker.getSeller(sellersFromPage, sellerFromDB);
 								if(sellerFormPage != null) {
 									sellerFromDB.isAvailable = true;
-									var changedOffers = priceChecker.getNewOffers(sellerFromDB.offers, sellerFormPage.offers);
-									if(changedOffers.length != 0) {
+									var changedOffers = [];
+									if(sellerFromDB.offers != null) {
+										changedOffers = priceChecker.getNewOffers(sellerFromDB.offers, sellerFormPage.offers);
+									} else {
+										changedOffers = sellerFormPage.offers;
+									}
+									if(changedOffers.length > 0) {
 										newOffers[sellerFormPage.name] = changedOffers;
 									}
 									if(sellerFormPage.offers != null) {

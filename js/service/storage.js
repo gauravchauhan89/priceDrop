@@ -40,7 +40,9 @@ var storage = {
 	
 	getCollection : function (collectionKey, callBack) {
 		chrome.storage.local.get(collectionKey, function (data) {
-			callBack(data[collectionKey]);
+			if(callBack != null) {
+				callBack(data[collectionKey]);
+			}
 		});
 	},
 	

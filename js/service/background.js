@@ -11,7 +11,7 @@ function checkerCallback(data, changedSellers, newOffers, newMinSeller) {
 	if(newOffers != null) {
 		for(var sellerName in newOffers) {
 			if(newOffers.hasOwnProperty(sellerName)) {
-				items.push({'title':sellerName, 'message':newOffers.length+' new offer(s)'});
+				items.push({'title':sellerName, 'message':newOffers[sellerName].length+' new offer(s)'});
 			}
 		}
 	}
@@ -25,11 +25,18 @@ function checkerCallback(data, changedSellers, newOffers, newMinSeller) {
 					'type' : "list", 
 					'iconUrl': "../images/icon.png", 
 					'title': data.details.name,
+					'message': data.details.name,
 					'items': items,
 					'isClickable': true
 				   };
 		
-		chrome.notifications.create(data.details.url, opt, function (id) {});
+		try {
+			chrome.notifications.create(data.details.url, opt, function (id) {});
+		} catch (e) {
+			console.log(e);
+		}
+		opt['timestamp'] = Date.now();
+		storage.addToCollection("pdNotificationInfo", data.details.url, opt);
 	}
 }
 
@@ -41,11 +48,13 @@ function checkProduct() {
 	storage.getCollection(flipkartDataKey, function (data) {
 		for(var key in data) {
 			if(data.hasOwnProperty(key)) {
-				priceChecker.check(key, new FlipkartModel(), flipkartDataKey, checkerCallback);
+				if(data[key].sellerInfos != null && data[key].sellerInfos.length > 0) { // if any sellerInfo present
+					priceChecker.check(key, new FlipkartModel(), flipkartDataKey, checkerCallback);
+				}
 			}
 		}
 	});
 }
 
 checkProduct();
-setInterval(checkProduct, 2*60*1000);	// 2 hours
+setInterval(checkProduct, 10*60*1000);	// 2 hours
