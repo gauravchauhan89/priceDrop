@@ -127,6 +127,9 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 					mainPrice = mainPrice - ele.priceChange;
 				});
 				
+				priceArray.push(mainPrice);
+				dateArray.push(0);
+				
 				var data = {
 					    labels: dateArray.reverse(),
 					    datasets: [
@@ -144,7 +147,7 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 					};
 				
 				var ctx = document.getElementById(canvasId).getContext("2d");
-				$scope.chartObject[canvasId] = new Chart(ctx).Line(data,{datasetFill : false, bezierCurve:false});
+				$scope.chartObject[canvasId] = new Chart(ctx).StepLine(data,{datasetFill : false, bezierCurve:false, stepLine:true, pointDot:false});
 			}
 		}
 	};
