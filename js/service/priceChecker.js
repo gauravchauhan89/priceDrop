@@ -69,12 +69,13 @@ var priceChecker = {
 							
 							var newLink = ajax.responseURL.split("\?")[0];
 							if(link != newLink) { // handle 302 or 301 url change
-								storage.removeFromCollection(storageCollectionKey, link, function () {
-									storage.addToCollection(storageCollectionKey, newLink, data);
-									if(successCallBack != null) {
-										successCallBack(data, changedSeller, newOffers, newMinSeller);
-									}
-								}, null);
+								storage.addToCollection(storageCollectionKey, newLink, data, function () {
+									storage.removeFromCollection(storageCollectionKey, link, function () {
+										if(successCallBack != null) {
+											successCallBack(data, changedSeller, newOffers, newMinSeller);
+										}
+									}, null);
+								});
 							} else {
 								storage.updateKeyInCollection(storageCollectionKey, link, data, function() {
 									if(successCallBack != null) {

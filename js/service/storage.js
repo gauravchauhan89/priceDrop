@@ -1,5 +1,5 @@
 var storage = {
-	addToCollection : function (collectionKey, key, value) {
+	addToCollection : function (collectionKey, key, value, callback) {
 		
 		chrome.storage.local.get(collectionKey, function (data) {
 			
@@ -9,14 +9,22 @@ var storage = {
 					map[key] = value;
 					var store = {};
 					store[collectionKey] = map;
-					chrome.storage.local.set(store);
+					if(callback != undefined && callback != null) {
+						chrome.storage.local.set(store, callback);
+					} else {
+						chrome.storage.local.set(store);
+					}
 				}
 			} else {
 				var map = {};
 				map[key] = value;
 				var store = {};
 				store[collectionKey] = map;
-				chrome.storage.local.set(store);
+				if(callback != undefined && callback != null) {
+					chrome.storage.local.set(store, callback);
+				} else {
+					chrome.storage.local.set(store);
+				}
 			}
 		});
 	},
