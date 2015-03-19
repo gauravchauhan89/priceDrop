@@ -4,6 +4,7 @@
     <title>Flipkart</title>
     <link rel="stylesheet" href="../lib/third-party/angular-csp.css" type="text/css" />
     <link rel="stylesheet" href="../lib/third-party/bootcards-desktop.min.css" type="text/css" />
+    <link rel="stylesheet" href="../lib/third-party/font-awesome.min.css" type="text/css" />
     <style>
       body {
         min-width: 357px;
@@ -39,6 +40,10 @@
 		display: table-cell;
 	 	background: gray;
 		height: 3px;
+      }
+      
+      .sellerNotAvailable {
+      	background: red;
       }
       
       .mainPriceReduced {
@@ -169,7 +174,7 @@
 				<div class="col-sm-7">
 					<div class="form-group">
 						<input type="text" class="form-control" placeholder="Search ..." ng-model="searchText"/>
-							<i class="fa fa-search"></i>
+							<!-- <i class="fa fa-search"></i> -->
 					</div>
 				</div>
 	  		</div>
@@ -226,8 +231,9 @@
 				  							Rating
 				  						</div>
 				  					</div>
-					  					<div style="display: table-row;" ng-repeat="seller in value.sellerInfos" ng-class="{'danger':seller.isAvailable==false}" ng-click="generateGraph(seller, value.details.id, seller.name)" data-toggle="collapse" data-target="#{{value.details.id}}{{seller.name | removeWhiteSpace}}">
+					  					<div style="display: table-row;" ng-repeat="seller in value.sellerInfos" ng-class="{'sellerNotAvailable':seller.isAvailable==false}" ng-click="generateGraph(seller, value.details.id, seller.name)" data-toggle="collapse" data-target="#{{value.details.id}}{{seller.name | removeWhiteSpace}}">
 					  						<div style="padding: 5px;display: table-cell;">
+					  							<i ng-if="seller.priceHistory.length > 0" class="fa fa-exclamation-circle"></i>
 					  							{{seller.name}}
 					  						</div>
 					  						<div style="padding: 5px;display: table-cell;">
