@@ -26,6 +26,21 @@
 		top: -4px;
       }
       
+      .graph {
+        width: 300px;
+        position: absolute;
+		left: 45px;
+  		background: white;
+  		z-index: 1;
+      }
+      
+      .table-header {
+		padding: 5px;
+		display: table-cell;
+	 	background: gray;
+		height: 3px;
+      }
+      
       .mainPriceReduced {
       	    background-color: greenyellow;
       }
@@ -199,36 +214,36 @@
 				  					<b>{{value.priceInfo.otherPrice}}</b>
 				  				</div> -->
 			  				</div>
-			  				<table class="table table-hover table-striped table-bordered" ng-show="value.sellerInfos.length > 0">
-				  					<tr>
-				  						<th style="padding: 5px;">
+			  				<div style="height: 120px; display: table;" ng-show="value.sellerInfos.length > 0">
+				  					<div style="display: table-row;">
+				  						<div class="table-header">
 				  							Seller Name
-				  						</th>
-				  						<th style="padding: 5px;">
+				  						</div>
+				  						<div class="table-header">
 				  							Price
-				  						</th>
-				  						<th style="padding: 5px;">
+				  						</div>
+				  						<div class="table-header">
 				  							Rating
-				  						</th>
-				  					</tr>
-				  					<tr ng-repeat="seller in value.sellerInfos" ng-class="{'danger':seller.isAvailable==false}" ng-click="generateGraph(seller, value.details.id, seller.name)" data-toggle="collapse" data-target="#{{value.details.id}}{{seller.name | removeWhiteSpace}}">
-				  						<td style="padding: 5px;">
-				  							{{seller.name}}
-				  						</td>
-				  						<td style="padding: 5px;">
-				  							{{seller.price}}
-				  						</td>
-				  						<td style="padding: 5px;">
-				  							{{seller.rating}}
-				  							<span class="close" ng-click="removeSeller(value, seller)">x</span>
-				  						</td>
-				  						<!-- style="position: absolute;left: 30px;top: inherit;" -->
-				  						<td ng-if="seller.priceHistory.length > 0">
-											<canvas width="300" height="200" id="{{value.details.id}}{{seller.name | removeWhiteSpace}}" class="collapse">
-										    </canvas>
-				  						</td>
-				  					</tr>
-				  				</table>
+				  						</div>
+				  					</div>
+					  					<div style="display: table-row;" ng-repeat="seller in value.sellerInfos" ng-class="{'danger':seller.isAvailable==false}" ng-click="generateGraph(seller, value.details.id, seller.name)" data-toggle="collapse" data-target="#{{value.details.id}}{{seller.name | removeWhiteSpace}}">
+					  						<div style="padding: 5px;display: table-cell;">
+					  							{{seller.name}}
+					  						</div>
+					  						<div style="padding: 5px;display: table-cell;">
+					  							{{seller.price}}
+					  						</div>
+					  						<div style="padding: 5px;display: table-cell;">
+					  							{{seller.rating}}
+					  							<span class="close" ng-click="removeSeller(value, seller)">x</span>
+					  						</div>
+					  						<!-- style="position: absolute;left: 30px;top: inherit;" -->
+					  						<!-- <span style="" ng-if="seller.priceHistory.length > 0"> -->
+												<canvas ng-if="seller.priceHistory.length > 0" class="graph collapse" height="200" id="{{value.details.id}}{{seller.name | removeWhiteSpace}}">
+											    </canvas>
+					  						<!-- </span> -->
+					  					</div>
+				  				</div>
 		  			</div>
 		  			<div class="panel-footer">
 		  				<div class="btn-group btn-group-justified">
