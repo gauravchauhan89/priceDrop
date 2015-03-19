@@ -33,6 +33,8 @@ var storage = {
 						chrome.storage.local.set(store, callback);
 					else
 						chrome.storage.local.set(store);
+				} else {
+					throw "Key: "+key+" does not exists in collection: "+collectionKey;
 				}
 			}
 		});

@@ -57,4 +57,4 @@ function checkProduct() {
 }
 
 checkProduct();
-setInterval(checkProduct, 10*60*1000);	// 2 hours
+setInterval(checkProduct, 2*60*1000);	// 2 hours

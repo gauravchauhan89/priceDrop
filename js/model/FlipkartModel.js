@@ -9,14 +9,17 @@ FlipkartModel.prototype = Object.create(BaseModel.prototype);
 
 FlipkartModel.prototype.getDetails = function (data) {
 		var details = new Details();
-		var name = $(data).find("[itemprop='name']");
-		var imageUrl = $(data).find("img.productImage")[0].src;
-		
-		details.name = name[0].innerHTML;
-		details.imageUrl = imageUrl;
-		details.type = 'flipkart';
-		details.additionTime = Date.now();
-		
+		try {
+			var name = $(data).find("[itemprop='name']");
+			var imageUrl = $(data).find("img.productImage")[0].src;
+	
+			details.name = name[0].innerHTML;
+			details.imageUrl = imageUrl;
+			details.type = 'flipkart';
+			details.additionTime = Date.now();
+		} catch (e) {
+			console.log(e);
+		}
 		return details;
 };
 

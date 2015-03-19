@@ -222,7 +222,8 @@
 				  							{{seller.rating}}
 				  							<span class="close" ng-click="removeSeller(value, seller)">x</span>
 				  						</td>
-				  						<td>
+				  						<!-- style="position: absolute;left: 30px;top: inherit;" -->
+				  						<td ng-if="seller.priceHistory.length > 0">
 											<canvas width="300" height="200" id="{{value.details.id}}{{seller.name | removeWhiteSpace}}" class="collapse">
 										    </canvas>
 				  						</td>

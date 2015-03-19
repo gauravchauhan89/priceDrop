@@ -1,16 +1,14 @@
 var priceChecker = {
 	check: function(link, model, storageCollectionKey, successCallBack) {
-		var ajax = new XMLHttpRequest();
-		ajax.onload = function () {
+		$.ajax({
+			url: link,
+			success: function (productHtml, status, jqXHR) {
 					console.log(link);
-					console.log(ajax.responseURL.split("\?")[0]);
 					storage.getFromCollection(storageCollectionKey, link, function (data) {
 						try {
-							var details = model.getDetails(ajax.responseText);
-							if(details.name != data.details.name) {
-								data.details.name = details.name;
-							}
-							var sellersFromPage = model.getAllSellers(ajax.responseText);
+							var details = model.getDetails(productHtml);
+							console.log(details);
+							var sellersFromPage = model.getAllSellers(productHtml);
 							var sellersFromDB = data.sellerInfos;
 							var changedSeller = [];
 							var newOffers = {};
@@ -67,21 +65,11 @@ var priceChecker = {
 								});
 							}
 							
-							var newLink = ajax.responseURL.split("\?")[0];
-							if(link != newLink) { // handle 302 or 301 url change
-								storage.removeFromCollection(storageCollectionKey, link, function () {
-									storage.addToCollection(storageCollectionKey, newLink, data);
-									if(successCallBack != null) {
-										successCallBack(data, changedSeller, newOffers, newMinSeller);
-									}
-								}, null);
-							} else {
-								storage.updateKeyInCollection(storageCollectionKey, link, data, function() {
-									if(successCallBack != null) {
-										successCallBack(data, changedSeller, newOffers, newMinSeller);
-									}
-								});
-							}
+							storage.updateKeyInCollection(storageCollectionKey, link, data, function() {
+								if(successCallBack != null) {
+									successCallBack(data, changedSeller, newOffers, newMinSeller);
+								}
+							});
 						} catch (e) {
 							if(e instanceof OutOfStockException) {
 								if(data != null) {
@@ -95,14 +83,11 @@ var priceChecker = {
 							console.log(e);
 						}
 					});
-			};
-			
-			ajax.addEventListener("error", function (evt) {
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
 				// TODO log errors
-				console.log(evt);
-			}, false);
-			ajax.open("get", link, true);
-			ajax.send();
+			}
+		});
 	},
 
 	getMinSeller: function (sellers) {
