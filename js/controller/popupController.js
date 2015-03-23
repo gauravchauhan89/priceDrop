@@ -107,7 +107,7 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 	};
 	
 	$scope.chartObject = {};
-	
+	$scope.month = ['Jan','Feb','March', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 	$scope.generateGraph = function (seller, canvasId1, canvasId2) {
 		var priceHistory = seller.priceHistory;
 		if(priceHistory.length > 0) {
@@ -123,7 +123,7 @@ priceDropApp.controller('PopupController',['$scope', function ($scope) {
 				priceHistory.forEach(function (ele) {
 					priceArray.push(mainPrice);					
 					var date = new Date(ele.date);
-					dateArray.push(date.getDate()+" "+date.getMonth()+" "+date.getFullYear());
+					dateArray.push(date.getDate()+" "+$scope.month[date.getMonth()-1]+" "+date.getFullYear());
 					mainPrice = mainPrice - ele.priceChange;
 				});
 				

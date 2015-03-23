@@ -7,81 +7,84 @@ var priceChecker = {
 					storage.getFromCollection(storageCollectionKey, link, function (data) {
 						try {
 							var details = model.getDetails(ajax.responseText);
-							if(details.name != data.details.name) {
-								data.details.name = details.name;
-							}
-							var sellersFromPage = model.getAllSellers(ajax.responseText);
-							var sellersFromDB = data.sellerInfos;
-							var changedSeller = [];
-							var newOffers = {};
-							sellersFromDB.forEach(function (sellerFromDB) {
-								var sellerFormPage = priceChecker.getSeller(sellersFromPage, sellerFromDB);
-								if(sellerFormPage != null) {
-									sellerFromDB.isAvailable = true;
-									var changedOffers = [];
-									if(sellerFromDB.offers != null) {
-										changedOffers = priceChecker.getNewOffers(sellerFromDB.offers, sellerFormPage.offers);
-									} else {
-										changedOffers = sellerFormPage.offers;
-									}
-									if(changedOffers.length > 0) {
-										newOffers[sellerFormPage.name] = changedOffers;
-									}
-									if(sellerFormPage.offers != null) {
-										sellerFromDB.offers = [];
-										sellerFormPage.offers.forEach(function (offer) {
-											sellerFromDB.offers.push(offer);
-										});
-									}
-									if(sellerFromDB.price != sellerFormPage.price) {
-										var priceHistory = new PriceHistory();
-										priceHistory.priceChange = sellerFormPage.price - sellerFromDB.price;
-										priceHistory.date = Date.now();
-										sellerFromDB.priceHistory.push(priceHistory);
-										sellerFromDB.price = sellerFormPage.price;
-										changedSeller.push(sellerFromDB);
-									}
-								} else {
-									sellerFromDB.isAvailable = false;
+							if(details.name != null) {
+								var newLink = null;
+								if(details.name != data.details.name) {
+									data.details.name = details.name;
+									newLink = ajax.responseURL.split("\?")[0];
 								}
-							});
-							data.sellerInfos = sellersFromDB;
-							
-							// calculate minSeller
-							var newMinSeller = null;
-							var minSeller = priceChecker.getMinSeller(sellersFromPage);
-							if(minSeller == null) {
-								// minSeller is null only if no seller exists
-								data.minSellerInfo.seller.isAvailable = false;
-							} else if(minSeller.equals(data.minSellerInfo.seller)) {
-								data.minSellerInfo.seller.isAvailable = true;
-							} else {
-								data.minSellerInfo.seller = minSeller;
-								data.minSellerInfo.userInterested = true;
-								newMinSeller = minSeller;
-								// check if newMinSeller is not already present
-								sellersFromDB.forEach(function (seller) {
-									if(minSeller.equals(seller)) {
-										newMinSeller = null;
+								var sellersFromPage = model.getAllSellers(ajax.responseText);
+								var sellersFromDB = data.sellerInfos;
+								var changedSeller = [];
+								var newOffers = {};
+								sellersFromDB.forEach(function (sellerFromDB) {
+									var sellerFormPage = priceChecker.getSeller(sellersFromPage, sellerFromDB);
+									if(sellerFormPage != null) {
+										sellerFromDB.isAvailable = true;
+										var changedOffers = [];
+										if(sellerFromDB.offers != null) {
+											changedOffers = priceChecker.getNewOffers(sellerFromDB.offers, sellerFormPage.offers);
+										} else {
+											changedOffers = sellerFormPage.offers;
+										}
+										if(changedOffers.length > 0) {
+											newOffers[sellerFormPage.name] = changedOffers;
+										}
+										if(sellerFormPage.offers != null) {
+											sellerFromDB.offers = [];
+											sellerFormPage.offers.forEach(function (offer) {
+												sellerFromDB.offers.push(offer);
+											});
+										}
+										if(sellerFromDB.price != sellerFormPage.price) {
+											var priceHistory = new PriceHistory();
+											priceHistory.priceChange = sellerFormPage.price - sellerFromDB.price;
+											priceHistory.date = Date.now();
+											sellerFromDB.priceHistory.push(priceHistory);
+											sellerFromDB.price = sellerFormPage.price;
+											changedSeller.push(sellerFromDB);
+										}
+									} else {
+										sellerFromDB.isAvailable = false;
 									}
 								});
-							}
-							
-							var newLink = ajax.responseURL.split("\?")[0];
-							if(link != newLink) { // handle 302 or 301 url change
-								storage.addToCollection(storageCollectionKey, newLink, data, function () {
-									storage.removeFromCollection(storageCollectionKey, link, function () {
+								data.sellerInfos = sellersFromDB;
+								
+								// calculate minSeller
+								var newMinSeller = null;
+								var minSeller = priceChecker.getMinSeller(sellersFromPage);
+								if(minSeller == null) {
+									// minSeller is null only if no seller exists
+									data.minSellerInfo.seller.isAvailable = false;
+								} else if(minSeller.equals(data.minSellerInfo.seller)) {
+									data.minSellerInfo.seller.isAvailable = true;
+								} else {
+									data.minSellerInfo.seller = minSeller;
+									data.minSellerInfo.userInterested = true;
+									newMinSeller = minSeller;
+									// check if newMinSeller is not already present
+									sellersFromDB.forEach(function (seller) {
+										if(minSeller.equals(seller)) {
+											newMinSeller = null;
+										}
+									});
+								}
+								
+								if(newLink != null && link != newLink) { // handle 302 or 301 url change
+									storage.addToCollection(storageCollectionKey, newLink, data, function () {
+										storage.removeFromCollection(storageCollectionKey, link, function () {
+											if(successCallBack != null) {
+												successCallBack(data, changedSeller, newOffers, newMinSeller);
+											}
+										}, null);
+									});
+								} else {
+									storage.updateKeyInCollection(storageCollectionKey, link, data, function() {
 										if(successCallBack != null) {
 											successCallBack(data, changedSeller, newOffers, newMinSeller);
 										}
-									}, null);
-								});
-							} else {
-								storage.updateKeyInCollection(storageCollectionKey, link, data, function() {
-									if(successCallBack != null) {
-										successCallBack(data, changedSeller, newOffers, newMinSeller);
-									}
-								});
+									});
+								}
 							}
 						} catch (e) {
 							if(e instanceof OutOfStockException) {
