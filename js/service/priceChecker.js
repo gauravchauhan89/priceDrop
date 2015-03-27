@@ -60,9 +60,6 @@ var priceChecker = {
 									data.minSellerInfo.seller.isAvailable = true;
 								} else {
 									newMinSeller = minSeller;
-									if(minSeller.equals(data.minSellerInfo.seller) && !data.minSellerInfo.userInterested) {
-										newMinSeller = null;
-									}
 									data.minSellerInfo.seller = minSeller;
 									data.minSellerInfo.userInterested = true;
 									// check if newMinSeller is not already present
