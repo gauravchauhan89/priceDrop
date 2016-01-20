@@ -219,6 +219,36 @@
 				  					<b>{{value.priceInfo.otherPrice}}</b>
 				  				</div> -->
 			  				</div>
+			  				<div style="height: 120px; display: table;" ng-show="value.minSellerInfo.seller != null">
+				  					<div style="display: table-row;">
+				  						<div class="table-header">
+				  							Min Seller Name
+				  						</div>
+				  						<div class="table-header">
+				  							Price
+				  						</div>
+				  						<div class="table-header">
+				  							Offers
+				  						</div>
+				  						<div class="table-header">
+				  							Rating
+				  						</div>
+				  					</div>
+				  					<div style="display: table-row;">
+				  						<div style="padding: 5px;display: table-cell;">
+					  							{{value.minSellerInfo.seller.name}}
+					  					</div>
+					  					<div style="padding: 5px;display: table-cell;">
+					  							{{value.minSellerInfo.seller.price}}
+					  					</div>
+					  					<div style="padding: 5px;display: table-cell;">
+					  							{{value.minSellerInfo.seller.offers.length}}
+					  					</div>
+					  					<div style="padding: 5px;display: table-cell;">
+					  							{{value.minSellerInfo.seller.rating}}
+					  					</div>
+				  					</div>
+				  			</div>
 			  				<div style="height: 120px; display: table;" ng-show="value.sellerInfos.length > 0">
 				  					<div style="display: table-row;">
 				  						<div class="table-header">
